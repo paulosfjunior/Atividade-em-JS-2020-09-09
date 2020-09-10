@@ -19,7 +19,7 @@
       align-items: center;
       padding-top: 40px;
       padding-bottom: 40px;
-      background-color: #f5f5f5;
+      background-color: rgba(40, 40, 40, .3);
     }
 
     .calculadora {
@@ -28,6 +28,7 @@
       padding: 15px;
       margin: auto;
     }
+
     .calculadora .form-control {
       position: relative;
       box-sizing: border-box;
@@ -35,75 +36,111 @@
       padding: 10px;
       font-size: 16px;
     }
+
     .calculadora .form-control:focus {
       z-index: 2;
     }
+
     .alert {
+      margin: 0;
       position: fixed;
       left: 0;
       bottom: 0;
       width: 100%;
       text-align: center;
     }
+
   </style>
 </head>
 
 <body class="text-center">
   <div class="container-fluid">
-  <div class="calculadora">
-    <h1 class="h3 mb-3 font-weight-normal">Exercício</h1>
-    <label for="primeiroNumero" class="sr-only">Primeiro Número</label>
-    <input type="text" id="primeiroNumero" name="primeiroNumero" class="form-control" placeholder="Primeiro Número" required="" autofocus="">
-    <label for="segundoNumero" class="sr-only">Segundo Número</label>
-    <input type="text" id="segundoNumero" name="segundoNumero"  class="form-control mt-2 mb-2" placeholder="Segundo Número" required="" autofocus="">
-    <button class="btn btn-lg btn-success btn-block" type="button">Somar</button>
-    <button class="btn btn-lg btn-warning btn-block" type="button">Subtrair</button>
-    <div class="alert alert-dark" role="alert">
-      <span id="valor">...</span>
+    <div class="calculadora">
+      <h1 class="h3 mb-3 font-weight-normal">Exercício</h1>
+      <label for="primeiroNumero" class="sr-only">Primeiro Número</label>
+      <input type="number" id="primeiroNumero" name="primeiroNumero" class="form-control" placeholder="Primeiro Número"
+        required="" autofocus="">
+      <label for="segundoNumero" class="sr-only">Segundo Número</label>
+      <input type="number" id="segundoNumero" name="segundoNumero" class="form-control mt-2 mb-2"
+        placeholder="Segundo Número" required="" autofocus="">
+      <button class="btn btn-lg btn-success btn-block" type="button">Somar</button>
+      <button class="btn btn-lg btn-warning btn-block" type="button">Subtrair</button>
+      <button class="btn btn-lg btn-dark btn-block" type="button">Multiplicar</button>
+      <button class="btn btn-lg btn-light btn-block" type="button">Dividir</button>
+      <div class="modal fade" id="modalResultado" tabindex="-1" aria-labelledby="modalResultadoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-info">
+              <h5 class="modal-title" id="modalResultadoLabel">Resultado</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <span id="valor">...</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  <script>
-    var numero1 = document
-      .getElementsByName("primeiroNumero")[0];
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"></script>
+    <script>
+      const numero1 = document
+        .getElementsByName('primeiroNumero')[0];
 
-    var numero2 = document
-      .getElementsByName("segundoNumero")[0];
+      const numero2 = document
+        .getElementsByName('segundoNumero')[0];
 
-    var botaoSoma = document
-      .getElementsByTagName("button")[0];
+      const botaoSoma = document
+        .getElementsByTagName('button')[0];
 
-    var botaoSubtracao = document
-      .getElementsByTagName("button")[1];
+      const botaoSubtracao = document
+        .getElementsByTagName('button')[1];
 
-    botaoSoma.addEventListener("click", () => soma(numero1.value, numero2.value));
-    botaoSubtracao.addEventListener("click", function () {
-      let numero1 = document
-        .getElementsByName("primeiroNumero")[0];
+      const botaoMultiplicacao = document
+        .getElementsByTagName('button')[2];
 
-      let numero2 = document
-        .getElementsByName("segundoNumero")[0];
+      const botaoDivisao = document
+        .getElementsByTagName('button')[3];
 
-      let total = new Number(numero1.value) - new Number(numero2.value);
-      let span = document.getElementById("valor");
-      span.innerText = "Valor Total => " + total;
-    });
+      botaoSoma.addEventListener('click', () => operacao('+', numero1.value, numero2.value));
+      botaoSubtracao.addEventListener('click', () => operacao('-', numero1.value, numero2.value));
+      botaoMultiplicacao.addEventListener('click', () => operacao('*', numero1.value, numero2.value));
+      botaoDivisao.addEventListener('click', () => operacao('/', numero1.value, numero2.value));
 
-    const soma = (numero1, numero2) => {
-      let total = new Number(numero1) + new Number(numero2);
-      let span = document.getElementById("valor");
-      span.innerText = "Valor Total => " + total;
-    };
+      const operacao = (operacao, num1, num2) => {
+        const n1 = parseFloat(num1);
+        const n2 = parseFloat(num2);
 
-  </script>
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-    crossorigin="anonymous"></script>
+        let valor = '';
+        let span = document.getElementById('valor');
+
+        if (!isNaN(n1) && !isNaN(n2) && typeof n1 == 'number' && typeof n2 == 'number') {
+          valor = 'Resultado: ' + op[operacao](n1, n2);
+        } else {
+          valor = 'Insira dois números válidos.'
+        }
+
+        $('#modalResultado').modal('show')
+        span.innerText = valor
+      };
+
+      const op = {
+        '/': (a, b) => (a / b),
+        '*': (a, b) => (a * b),
+        '-': (a, b) => (a - b),
+        '+': (a, b) => (a + b)
+      };
+
+    </script>
 </body>
 
 </html>
